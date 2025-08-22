@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "src/app/**/*.ts": {
-      "maxLambdaRequestSize": "50mb"
-    }
-  }
-}
