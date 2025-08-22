@@ -99,7 +99,7 @@ export function ComparisonForm() {
             <Card>
               <CardHeader>
                 <CardTitle className="font-headline">Documentos</CardTitle>
-                <CardDescription>Faça o upload de múltiplos arquivos PDF (Extratos, Anexos SEI, etc.)</CardDescription>
+                <CardDescription>Faça o upload de múltiplos arquivos PDF, Limite 12 PDF ou 50mb(Extratos, Anexos SEI, etc.)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField
