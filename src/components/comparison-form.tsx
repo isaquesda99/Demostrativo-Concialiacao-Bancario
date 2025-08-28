@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, UploadCloud, FileText, X } from "lucide-react";
+import { Loader2, UploadCloud, FileText, X, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +15,7 @@ import { fileToDataUri } from "@/lib/utils";
 import { comparePdfsAction } from "@/actions/compare-pdfs";
 import type { AnalyzeFinancialDocumentsOutput } from "@/ai/flows/extract-and-compare-values";
 import { ComparisonResult } from "./comparison-result";
+
 
 const formSchema = z.object({
   pdfs: z.custom<FileList>().refine(files => files && files.length > 0, "Pelo menos um PDF é obrigatório.").refine(files => files && files.length >= 2, "É necessário enviar pelo menos dois arquivos para comparação."),
@@ -53,6 +54,12 @@ export function ComparisonForm() {
 
     const dataTransfer = new DataTransfer();
     updatedFiles.forEach(file => dataTransfer.items.add(file));
+    form.setValue("pdfs", dataTransfer.files, { shouldValidate: true });
+  };
+  
+  const handleRemoveAllFiles = () => {
+    setSelectedFiles([]);
+    const dataTransfer = new DataTransfer();
     form.setValue("pdfs", dataTransfer.files, { shouldValidate: true });
   };
 
@@ -98,8 +105,12 @@ export function ComparisonForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle className="font-headline">Documentos</CardTitle>
-                <CardDescription>Faça o upload de múltiplos arquivos Limite 12 PDF ou 50mb(Extratos, Anexos SEI, etc.)</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="font-headline">Documentos</CardTitle>
+                      <CardDescription>Faça o upload de múltiplos arquivos PDF (Extratos, Anexos SEI, etc.)</CardDescription>
+                    </div>
+                  </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField
@@ -134,7 +145,13 @@ export function ComparisonForm() {
                 />
                  {selectedFiles.length > 0 && (
                     <div className="space-y-2 pt-4">
-                        <h4 className="text-sm font-medium">Arquivos Selecionados:</h4>
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-medium">Arquivos Selecionados:</h4>
+                          <Button variant="ghost" size="sm" onClick={handleRemoveAllFiles} className="text-muted-foreground hover:text-destructive">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Limpar todos
+                          </Button>
+                        </div>
                         <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                             {selectedFiles.map((file, index) => (
                                 <li key={index} className="flex items-center justify-between gap-2 rounded-md border bg-muted p-2">
